@@ -1,14 +1,14 @@
 <template>
   <div>
-  <MapVisual2></MapVisual2>
+  <MapVisual></MapVisual>
   </div>
 </template>
 
 <script>
-import MapVisual2 from '@/components/MapComponents/MapVisual2'
+import MapVisual from '@/components/MapVisual'
 export default {
   components :{
-    MapVisual2,
+    MapVisual,
   }
 }
 </script>
