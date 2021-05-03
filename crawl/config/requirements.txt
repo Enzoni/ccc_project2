@@ -1,0 +1,4 @@
+twitterapi==2.7.1
+couchdb==1.2
+nltk==3.6.2
+textblob==0.15.3
