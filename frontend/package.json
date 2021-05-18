@@ -1,48 +1,40 @@
 {
-  "name": "front-end",
+  "name": "comp90024",
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
+    "serve": "vue-cli-service serve --port 80",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
     "axios": "^0.21.1",
-    "core-js": "^3.6.5",
-    "element-ui": "^2.15.1",
+    "bootstrap-vue": "^2.21.2",
+    "chart.js": "^2.9.4",
+    "core-js": "^2.6.12",
+    "jquery": "^3.6.0",
     "leaflet": "^1.7.1",
-    "vue": "^2.6.11",
+    "luxon": "^1.26.0",
+    "moment": "^2.29.1",
+    "semantic-ui-css": "^2.4.1",
+    "semantic-ui-vue": "^0.8.1",
+    "vue": "^2.6.12",
+    "vue-chartjs": "^3.5.1",
+    "vue-datetime": "^1.0.0-beta.14",
+    "vue-flash-message": "^0.7.2",
+    "vue-loading-overlay": "^3.4.2",
     "vue-router": "^3.5.1",
-    "vue2-leaflet": "^2.7.0"
+    "vue-smooth-scroll": "^1.0.13",
+    "vue2-leaflet": "^2.7.0",
+    "weekstart": "^1.1.0"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "~4.5.0",
-    "@vue/cli-plugin-eslint": "~4.5.0",
-    "@vue/cli-service": "~4.5.0",
+    "@vue/cli-plugin-babel": "^3.12.1",
+    "@vue/cli-plugin-eslint": "^3.12.1",
+    "@vue/cli-service": "^3.12.1",
     "babel-eslint": "^10.1.0",
-    "eslint": "^6.7.2",
-    "eslint-plugin-vue": "^6.2.2",
-    "vue-cli-plugin-vuetify": "~2.4.0",
-    "vue-template-compiler": "^2.6.11"
-  },
-  "eslintConfig": {
-    "root": true,
-    "env": {
-      "node": true
-    },
-    "extends": [
-      "plugin:vue/essential",
-      "eslint:recommended"
-    ],
-    "parserOptions": {
-      "parser": "babel-eslint"
-    },
-    "rules": {}
-  },
-  "browserslist": [
-    "> 1%",
-    "last 2 versions",
-    "not dead"
-  ]
+    "eslint": "^5.8.0",
+    "eslint-plugin-vue": "^5.2.3",
+    "vue-template-compiler": "^2.6.12"
+  }
 }
