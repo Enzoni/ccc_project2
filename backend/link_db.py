@@ -1,10 +1,11 @@
 import couchdb
 import json
 import re
-from setting import host, port, username, password, db_name1, db_name2
+from setting import host, port, username, password, db_name1, db_name2, db_name3
 # import csv
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+
 
 def link_db(host, port, username, password):
     server = couchdb.Server('http://' + username + ':' + password + '@' + host + ':' + port)
@@ -14,10 +15,21 @@ def link_db(host, port, username, password):
 server = link_db(host, port, username, password)
 dd = server[db_name1]
 aurin = server[db_name2]
+dogcoin = server[db_name3]
 
 
-app=Flask(__name__)
+app = Flask(__name__)
 CORS(app, resources=r'/*')
+def get_dogcoin(date):
+    do = dogcoin.get(id = 'dog')
+    for key in do:
+        if key == date:
+            price_list = do[key]
+    dic = {}
+    for i in range(len(price_list)):
+        dic[str(i+1)] = price_list[i]
+    return dic
+
 def get_sen(city, date):
     id = None
     if city == 'Adelaide':
@@ -34,7 +46,7 @@ def get_sen(city, date):
         id = 'btc_s_0505'
 
     info = dd.get(id=id)
-    if date == None:
+    if date is None:
         return json.dumps(info["overall"])
     else:
 
@@ -53,7 +65,7 @@ def get_sen(city, date):
             total_count += dic[i]['count']
             total_po += dic[i]['positive']
             total_ne += dic[i]['negative']
-        dic['total'] = {"sum": total_sen, "count": total_count, "positive": total_po, "negetive": total_ne}
+        dic['total'] = {"sum": total_sen, "count": total_count, "positive": total_po, "negative": total_ne}
 
     return dic
 
@@ -90,7 +102,7 @@ def a_ur(city):
     aur = {}
     for i in edu_["features"]:
 
-        if i["properties"]["gccsa_code_2016"] == code:
+        if i["properties"]["gcc_code16"] == code:
             aur["edu"] = i["properties"]["f_hghst_yr_schl_ns_tot"]
             break
     for i in income_["features"]:
@@ -109,59 +121,114 @@ def a_ur(city):
     return aur
 
 
-@app.route("/aurin", methods=["GET"])
-def get_au(city, date):
-    dic = get_sen(city, date)
-    aur = a_ur(city)
-    final_dic = {}
-    final_dic["sentiment"] = dic['total']['sum']
-    final_dic["count"] = dic['total']['count']
-    final_dic["positive"] = dic['total']['positive']
-    final_dic["negetive"] = dic['total']['negetive']
-    final_dic['edu'] = aur["edu"]
-    final_dic['income'] = aur["income"]
-    final_dic['emp'] = aur["emp"]
-    final_dic['unemp'] = aur["unemp"]
-    return json.dumps(final_dic)
+@app.route("/api/get_data_statistic", methods=["POST"])
+def get_au():
+    try:
+        input = request.json
+        dic = get_sen(input['city'], input['date'])
+        aur = a_ur(input['city'])
+        final_dic = {}
+        final_dic["sentiment"] = dic['total']['sum']
+        final_dic["count"] = dic['total']['count']
+        final_dic["positive"] = dic['total']['positive']
+        final_dic["negative"] = dic['total']['negative']
+        final_dic['edu'] = aur["edu"]
+        final_dic['income'] = aur["income"]
+        final_dic['emp'] = aur["emp"]
+        final_dic['unemp'] = aur["unemp"]
+        response = jsonify(isError=False, message="Success", statusCode=200, data=final_dic)
+        return response
+    except Exception as e:
+        return jsonify(isError=True, message="{}".format(e), statusCode=404)
 
 
-@app.route("/dogcoin", methods=["GET"])
-def get_dc(city, date):
-    final_dic = {}
-    dic = get_sen(city, date)
-    dic.pop("total")
-    final_dic['sen_hourly'] = {}
-    for i in dic:
-        final_dic['sen_hourly'][i] = dic[i]["sum"]
-    final_dic['dogcoin_price_hourly'] = {"0": 0.468447,
-                                         "1": 0.468014,
-                                         "2": 0.454778,
-                                         "3": 0.471,
-                                         "4": 0.474527,
-                                         "5": 0.472173,
-                                         "6": 0.464399,
-                                         "7": 0.407149,
-                                         "8": 0.425932,
-                                         "9": 0.450045,
-                                         "10": 0.454539,
-                                         "11": 0.456378,
-                                         "12": 0.453824,
-                                         "13": 0.447803,
-                                         "14": 0.448042,
-                                         "15": 0.432809}
-    return json.dumps(final_dic)
+@app.route("/api/get_dogcoin_price", methods=["POST"])
+def get_dc():
+    try:
+        input = request.json
+        final_dic = {}
+        dic = get_sen(input['city'], input['date'])
+
+        # dic.pop("total")
+
+        #del dic['total']
+        final_dic['sen_hourly'] = {}
+        for i in dic:
+            if i == 'total':
+                continue
+            final_dic['sen_hourly'][i] = dic[i]["sum"]
+        final_dic['dogcoin_price_hourly'] = get_dogcoin(input['date'])
+        #print(final_dic)
+        response = jsonify(isError=False, message="Success", statusCode=200, data=final_dic)
+        return response
+    except Exception as e:
+        return jsonify(isError=True, message="{}".format(e), statusCode=404)
 
 
-@app.route("/bar", methods=["GET"])
-def get_bar(date):
+@app.route("/api/get_cities", methods=["POST"])
+def get_city():
+    try:
+        result = {
+            'cities': [
+                {
+                    'city_name': 'Melbourne',
+                    'position': [-37.8136, 144.9631]
+                },
+                {
+                    'city_name': 'Sydney',
+                    'position': [-33.8688, 151.2093]
+                },
+                {
+                    'city_name': 'Brisbane',
+                    'position': [-27.4705, 153.0260]
+                },
+                {
+                    'city_name': 'Perth',
+                    'position': [-31.9523, 115.8613]
+                },
+                {
+                    'city_name': 'Adelaide',
+                    'position': [-34.9285, 138.6007]
+                }
+            ]
+        }
+        response = jsonify(isError=False, message="Success", statusCode=200, data=result)
+        return response
+    except Exception as e:
+        return jsonify(isError=True, message="{}".format(e), statusCode=404)
+    pass
+
+
+@app.route("/api/bar", methods=["POST"])
+def get_bar():
+    input = request.json
+    date = input['date']
     city_ = {}
-    for name in ['Sydney', 'Melbourne', 'Brisbane', 'Adelaide', 'Perth']:
-        aur = a_ur(name)
-        sen = get_sen(name, date)
-        city_[name] = {}
-        city_[name]['ave_sen'] = (sen['total']["sum"]) / (sen["total"]["count"])
-        city_[name]['edu'] = aur["edu"]
-        city_[name]['income'] = aur["income"]
-        city_[name]['emp'] = aur["emp"]
-        city_[name]['unemp'] = aur["unemp"]
-    return json.dumps(city_)
+    city_['ave_sen'] = {}
+    city_['edu'] = {}
+    city_['income'] = {}
+    city_['emp'] = {}
+    city_['unemp'] = {}
+    try:
+        for name in ['Sydney', 'Melbourne', 'Brisbane', 'Adelaide', 'Perth']:
+            aur = a_ur(name)
+            sen = get_sen(name, date)
+
+            city_['ave_sen'][name] = (sen['total']["sum"]) / (sen["total"]["count"])
+            city_['edu'][name] = aur["edu"]
+            city_['income'][name] = aur["income"]
+            city_['emp'][name] = aur["emp"]
+            city_['unemp'][name] = aur["unemp"]
+        response = jsonify(isError=False, message="Success", statusCode=200, data=city_)
+        return response
+    except Exception as e:
+        return jsonify(isError=True, message="{}".format(e), statusCode=404)
+
+
+# @app.route('/', methods=['GET'])
+# def hello_world():
+#     return 'Ok'
+
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)
