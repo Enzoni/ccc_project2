@@ -100,10 +100,10 @@ def a_ur(city):
     income_ = aurin.get(id=income)
     job_ = aurin.get(id=job)
     aur = {}
-    for i in edu_["features"]:
+    for i in emp_["features"]:
 
-        if i["properties"]["gcc_code16"] == code:
-            aur["edu"] = i["properties"]["f_hghst_yr_schl_ns_tot"]
+        if i["properties"]["gccsa_code_2016"] == code:
+            aur["edu"] = i["properties"]["hghst_yr_schl_cmpltd_prsns_agd_15_yrs_cnss_10_eqvlnt_pc"]
             break
     for i in income_["features"]:
         if i["properties"]["gccsa_code_2016"] == code:
@@ -112,11 +112,11 @@ def a_ur(city):
     for i in emp_["features"]:
 
         if i["properties"]["gccsa_code_2016"] == code:
-            aur["unemp"] = i["properties"]["labour_force_status_persons_aged_15_years_census_unemployed_num"]
+            aur["unemp"] = i["properties"]["lbr_frce_stts_prsns_agd_15_yrs_cnss_unmplymnt_rte_pc"]
             break
     for i in emp_["features"]:
         if i["properties"]["gccsa_code_2016"] == code:
-            aur["emp"] = i["properties"]["labour_force_status_persons_aged_15_years_census_employed_num"]
+            aur["emp"] = i["properties"]["labour_force_status_persons_aged_15_years_census_employed_num"]/i["properties"]["lbr_frce_stts_prsns_agd_15_yrs_cnss_ttl_ppltn_and_ovr_nm"] 
             break
     return aur
 
