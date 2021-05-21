@@ -105,6 +105,11 @@ def a_ur(city):
         if i["properties"]["gccsa_code_2016"] == code:
             aur["edu"] = i["properties"]["hghst_yr_schl_cmpltd_prsns_agd_15_yrs_cnss_10_eqvlnt_pc"]
             break
+    for i in emp_["features"]:
+
+        if i["properties"]["gccsa_code_2016"] == code:
+            aur["no_edu"] = i["properties"][" hghst_yr_schl_cmpltd_prsns_agd_15_yrs_cnss_go_pc"]
+            break
     for i in income_["features"]:
         if i["properties"]["gccsa_code_2016"] == code:
             aur["income"] = i["properties"]["mean_aud_2014_15"]
