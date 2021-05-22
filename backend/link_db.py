@@ -133,6 +133,7 @@ def get_au():
         dic = get_sen(input['city'], input['date'])
         aur = a_ur(input['city'])
         final_dic = {}
+        final_dic["ave_sentiment"] = (dic['total']['sum'])/(dic['total']['count'])
         final_dic["sentiment"] = dic['total']['sum']
         final_dic["count"] = dic['total']['count']
         final_dic["positive"] = dic['total']['positive']
@@ -161,7 +162,7 @@ def get_dc():
         for i in dic:
             if i == 'total':
                 continue
-            final_dic['sen_hourly'][i] = dic[i]["sum"]
+            final_dic['sen_hourly'][i] = (dic[i]["sum"])/(dic[i]["count"])
         final_dic['dogcoin_price_hourly'] = get_dogcoin(input['date'])
         #print(final_dic)
         response = jsonify(isError=False, message="Success", statusCode=200, data=final_dic)
