@@ -1,0 +1,21 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+
+
+```{r}
+library('vars')
+df <- read.csv("C:/Users/enzon/Desktop/arma/df.csv")
+df = df[,c(3,4)]
+VARselect(df, lag.max=24, type='const')
+```
+
+
+```{r}
+model = VAR(df[,c(2,1)], lag.max = 1, type = "const")
+summary(model)
+```
+
+

@@ -30,12 +30,9 @@ def get_tweet(item, city):
 
 
 class TweetDB():
-    def __init__(self, db_name, user_name='admin', password='123456'):
-        self.url = 'http://{}:{}@172.26.133.1:5984/'.format(user_name, password)
+    def __init__(self, db_name, user_name='admin', password='password'):
+        self.url = 'http://{}:{}@172.26.132.206:5984/'.format(user_name, password)
         self.server = couchdb.Server(self.url)
-        # self.server = couchdb.Server()
-        # if DB doesn't exist, initialize a DB, else
-
         try:
             self.db = self.server.create(db_name)
             self._create_views()
@@ -56,39 +53,8 @@ class TweetDB():
                 doc[_key] = _value
                 self.db.save(doc)
 
-    # TODO 这里是抄的没改
     def _create_views(self):
-        """ create 2 default views for the database """
-        # view 1: return total count of tweets
-        count_map = "function(doc) { emit(doc.id,1); }"
-        count_reduce = "function(keys, values) { return sum(values); }"
-        view = design.ViewDefinition("twitter",  # design document
-                                     "count_tweets",  # view name
-                                     count_map,  # map
-                                     reduce_fun=count_reduce)
-
-        view.sync(self.db)
-
-        # view 2: return all stored tweet documents
-        get_tweets = "function(doc) { emit(('0000000000000000000' + doc.id).slice(-19), doc); }"
-        view = design.ViewDefinition("twitter", "get_tweets", get_tweets)
-        view.sync(self.db)
-
-        # view 5: return twitter_id
-        get_twitter_id = "function(doc) { emit(doc.id,1); }"
-        view = design.ViewDefinition("twitter", "get_twitter_id", get_twitter_id)
-        view.sync(self.db)
-
-        # view 3: return all stored tweet documents
-        my_func_1 = "function(doc) { emit(doc.id,{'coordinates':doc.coordinates,'text':doc.text}); }"
-        view = design.ViewDefinition("twitter", "my_f_o", my_func_1)
-        view.sync(self.db)
-
-        # view 4: return all stored tweet documents
-        my_func_2 = "function(doc) { emit(doc.id,{'sentiment':doc.sentiment}); }"
-        # count_reduce = "function(keys, values) { return sum(values); }"
-        view = design.ViewDefinition("twitter", "my_f_t", my_func_2, reduce_fun='_sum')
-        view.sync(self.db)
+    	return
 
 
 def main(args):
