@@ -1,0 +1,9 @@
+---
+- hosts: all
+  vars_files:
+    - vars/local_vars.yaml
+    - vars/remote_vars.yaml
+  gather_facts: true
+  roles:
+    - role: init-environment
+    - role: docker-remote

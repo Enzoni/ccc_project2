@@ -1,0 +1,39 @@
+---
+# COMP90024 Assignment 2
+# Team: 38
+# City: Melbourne
+# Members:
+# Ziran Gu (1038782)
+# Jueying Wang (1016724)
+# Yifei Zhou(980429)
+# Jiakai Ni (988303)
+# Ziyue Liu (1036109)
+-
+- name: set docker apt repository key
+  become: yes
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+
+- name: set docker apt repository
+  become: yes
+  apt_repository:
+    repo: "deb https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
+    mode: '644'
+    update_cache: yes
+    state: present
+
+- name: install docker
+  become: yes
+  apt:
+    name: ['docker-ce']
+    state: latest
+    install_recommends: no
+    update_cache: yes
+
+- name: install docker-compose
+  become: yes
+  pip:
+    name: ['docker-compose']
+    version: latest
+    state: present  

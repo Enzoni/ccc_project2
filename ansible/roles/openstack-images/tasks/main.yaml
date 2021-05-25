@@ -1,0 +1,26 @@
+---
+# COMP90024 Assignment 2
+# Team: 38
+# City: Melbourne
+# Members:
+# Ziran Gu (1038782)
+# Jueying Wang (1016724)
+# Yifei Zhou(980429)
+# Jiakai Ni (988303)
+# Ziyue Liu (1036109)
+
+# show all available Openstack images
+- name: retrieve all availabile Openstack images
+  os_image_info:
+  register: image_result
+
+- name: get image names and Ids
+  set_fact:
+    image_facts: "{{ image_facts|default([]) + [ {'name': item.name, 'id': item.id} ] }}"
+  loop: '{{ image_result.openstack_image }}'
+  when: item.name is defined
+
+- name: show images
+  debug:
+    msg: "Image name: {{ item.name }}; Image Id: {{ item.id }}"
+  loop: '{{ image_facts }}'

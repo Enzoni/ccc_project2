@@ -1,0 +1,33 @@
+---
+# COMP90024 Assignment 2
+# Team: 38
+# City: Melbourne
+# Members:
+# Ziran Gu (1038782)
+# Jueying Wang (1016724)
+# Yifei Zhou(980429)
+# Jiakai Ni (988303)
+# Ziyue Liu (1036109)
+
+#############################################
+#                  Common                   #
+#############################################
+project_working_directory: /Users/lilyz/repos/ansible/ansible
+proxy_address: http://wwwproxy.unimelb.edu.au:8000
+remote_working_directory: /home/ubuntu
+
+#############################################
+#                 CouchDB                   #
+#############################################
+couchdb_version: 2.3.0
+couchdb_config_path: /home/ubuntu/couchdb/etc
+couchdb_share: 6
+couchdb_replica: 2
+cluster_cookie: 'helloworld'
+cluster_communication_port_min: 9100
+cluster_communication_port_max: 9102
+
+#############################################
+#                  Docker                   #
+#############################################
+enable_docker_remote_control: true

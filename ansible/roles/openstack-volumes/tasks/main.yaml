@@ -1,0 +1,31 @@
+---
+# COMP90024 Assignment 2
+# Team: 38
+# City: Melbourne
+# Members:
+# Ziran Gu (1038782)
+# Jueying Wang (1016724)
+# Yifei Zhou(980429)
+# Jiakai Ni (988303)
+# Ziyue Liu (1036109)
+-
+# Create volumes from vars
+- name: create volumes on nectar
+  os_volume:
+    display_name: '{{ item.name }}'
+    size: '{{ item.size }}'
+    availability_zone: '{{ availability_zone }}'
+    wait: yes
+    timeout: 600
+    state: present
+  loop: '{{ volumes }}'
+  register: os_vol
+
+
+- name: create a list of volume ids
+  set_fact:
+    os_vol_ids: '{{ os_vol_ids|default([]) + [ item.id ] }}'
+  loop: '{{ os_vol.results }}'
+
+- debug:
+    msg: "Volumes {{ os_vol_ids }} has been created."

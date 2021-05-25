@@ -1,0 +1,59 @@
+---
+# COMP90024 Assignment 2
+# Team: 38
+# City: Melbourne
+# Members:
+# Ziran Gu (1038782)
+# Jueying Wang (1016724)
+# Yifei Zhou(980429)
+# Jiakai Ni (988303)
+# Ziyue Liu (1036109)
+-
+- name: create instances
+  os_server:
+    name: '{{ item.name }}'
+    image: '{{ instance_image }}'
+    key_name: '{{ instance_key_name }}'
+    flavor: '{{ item.flavor }}'
+    availability_zone: '{{ availability_zone }}'
+    security_groups: '{{ security_group_names }}'
+    network: '{{ instance_network }}'
+    volumes: "{{ item.volumes }}"
+    auto_floating_ip: yes
+    wait: yes
+    timeout: 600
+    state: present
+  register: os_instance
+  loop: '{{ instances }}'
+
+- name: set ip address to fact
+  set_fact:
+    ip_addresses: "{{ ip_addresses|default([]) + [ {'name': item.item.name, 'ip': item.openstack.public_v4} ] }}"
+  when: item.openstack is defined
+  loop: '{{ os_instance.results }}'
+
+- debug:
+    msg: "{{ item.item.name }}@{{ item.openstack.public_v4 }}"
+  loop: '{{ os_instance.results }}'
+
+- name: create inventory file
+  copy:
+    content: "[all:vars]\nansible_user=ubuntu\nansible_ssh_private_key_file=~/.ssh/group38\n\n[dbServers:children]\ndbMaster\ndbSlave\n\n[dbMaster:children]\ninstance1\n\n[dbSlave:children]\ninstance2\ninstance3\n\n"
+    dest: "{{project_working_directory}}/inventory/hosts.ini"
+
+- name: set ip addresses to inventory file
+  lineinfile:
+    line: "[{{ item.name }}]\n{{ item.ip }}\n"
+    dest: "{{project_working_directory}}/inventory/hosts.ini"
+  loop: '{{ ip_addresses }}'
+
+- name: create new ssh config file
+  copy:
+    content: ""
+    dest: "~/.ssh/nectar_config"
+
+- name: write ssh config file with new ip
+  lineinfile:
+    line: "# {{item.0.name}}\nHost {{ item.0.name }}\nHostName {{item.1.ip}}\nUser ubuntu\nPort 22\nIdentityFile ~/.ssh/{{ instance_key_name }}\n"
+    dest: "~/.ssh/nectar_config"
+  loop: '{{ instances|zip(ip_addresses)|list }}'

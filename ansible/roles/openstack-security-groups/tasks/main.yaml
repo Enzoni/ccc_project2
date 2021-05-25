@@ -1,0 +1,37 @@
+---
+# COMP90024 Assignment 2
+# Team: 38
+# City: Melbourne
+# Members:
+# Ziran Gu (1038782)
+# Jueying Wang (1016724)
+# Yifei Zhou(980429)
+# Jiakai Ni (988303)
+# Ziyue Liu (1036109)
+-
+#  create security group(s)
+- name: create security group(s)
+  os_security_group:
+    name: '{{ item.name }}'
+    description: '{{ item.description }}'
+    state: present
+  loop: '{{ security_groups }}'
+
+- name: create a list of security group names
+  set_fact:
+    security_group_names: '{{ security_group_names|default([]) + [item.name] }}'
+  loop: '{{ security_groups }}'
+
+- debug:
+    msg: "Security group(s) {{ security_group_names }} has been created."
+
+# create security group rule(s)
+- name: create security group rules
+  os_security_group_rule:
+    security_group: '{{ item.name }}'
+    protocol: '{{ item.protocol }}'
+    port_range_min: '{{ item.port_range_min }}'
+    port_range_max: '{{ item.port_range_max }}'
+    remote_ip_prefix: '{{ item.remote_ip_prefix }}'
+    state: present
+  loop: '{{ security_groups }}'

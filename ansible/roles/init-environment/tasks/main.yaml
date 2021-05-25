@@ -1,0 +1,43 @@
+---
+# COMP90024 Assignment 2
+# Team: 38
+# City: Melbourne
+# Members:
+# Ziran Gu (1038782)
+# Jueying Wang (1016724)
+# Yifei Zhou(980429)
+# Jiakai Ni (988303)
+# Ziyue Liu (1036109)
+-
+- name: add proxy to environment
+  become: yes
+  lineinfile:
+    line: "http_proxy=\"{{ proxy_address }}\"\nhttps_proxy=\"{{ proxy_address }}\"\nftp_proxy=\"{{ proxy_address }}\"\nno_proxy=\"localhost,127.0.0.1,127.0.1.1,0.0.0.0,ubuntu,group38-instance1\"\n"
+    dest: /etc/environment
+
+# add proxy configuration
+- name: set http proxy
+  become: yes
+  shell: echo 'set proxy configuration success'
+  environment:
+    http_proxy: "{{ proxy_address }}"
+    https_proxy: "{{ proxy_address }}"
+    ftp_proxy: "{{ proxy_address }}"
+    no_proxy: "localhost,127.0.0.1,127.0.1.1,0.0.0.0"
+
+# apt-get upgrade; apt-get update
+- name: update apt
+  become: yes
+  apt:
+    upgrade: yes
+    update_cache: yes
+
+- name: install dependencies
+  become: yes
+  apt:
+    name: ['vim','tmux','unzip','git','python-pip','curl',]
+    state: latest
+    install_recommends: no
+    update_cache: yes
+
+- include_tasks: docker.yaml

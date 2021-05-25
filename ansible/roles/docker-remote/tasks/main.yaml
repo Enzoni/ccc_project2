@@ -1,0 +1,67 @@
+---
+# COMP90024 Assignment 2
+# Team: 38
+# City: Melbourne
+# Members:
+# Ziran Gu (1038782)
+# Jueying Wang (1016724)
+# Yifei Zhou(980429)
+# Jiakai Ni (988303)
+# Ziyue Liu (1036109)
+-
+- name: check docker folders
+  become: yes
+  stat:
+    path: '/etc/systemd/system/docker.service.d'
+  register: docker_dir
+
+- name: create docker directory
+  become: yes
+  file:
+    path: '/etc/systemd/system/docker.service.d'
+    recurse: yes
+    state: directory
+  when: docker_dir.stat.exists == false
+
+- name: check couchdb folders
+  become: yes
+  stat:
+    path: '/vdata/couchdb'
+  register: couchdb_dir
+
+- name: create couchdb directory
+  become: yes
+  file:
+    path: '/vdata/couchdb'
+    recurse: yes
+    state: directory
+  when: couchdb_dir.stat.exists == false
+
+- name: set docker proxy
+  become: yes
+  copy:
+    content: "[Service]\nEnvironment=\"HTTP_PROXY={{ proxy_address }}\""
+    dest: /etc/systemd/system/docker.service.d/http-proxy.conf
+
+- name: set docker remote port
+  become: yes
+  copy:
+    content: "[Service]\nExecStart=\nExecStart=/usr/bin/dockerd -H tcp://0.0.0.0:8000 -H unix:///var/run/docker.sock"
+    dest: /etc/systemd/system/docker.service.d/docker.conf
+
+- name: copy docker service configuration file
+  become: yes
+  template:
+    src: "docker.service.j2"
+    dest: "/lib/systemd/system/docker.service"
+    owner: root
+    group: root
+    force: yes
+
+- name: change docker proxy | step 5
+  become: yes
+  command: systemctl daemon-reload
+
+- name: change docker proxy | step 6
+  become: yes
+  command: systemctl restart docker

@@ -1,0 +1,37 @@
+---
+# COMP90024 Assignment 2
+# Team: 38
+# City: Melbourne
+# Members:
+# Ziran Gu (1038782)
+# Jueying Wang (1016724)
+# Yifei Zhou(980429)
+# Jiakai Ni (988303)
+# Ziyue Liu (1036109)
+-
+# install dependencies on the host
+- name: Install pip
+  become: yes
+  apt:
+    name: ['python-pip']
+    state: latest
+    update_cache: yes
+  when: ansible_distribution == "Ubuntu"
+# sudo apt-get update; sudo apt-get install python-pip
+
+
+- name: Update pip
+  become: yes
+  pip:
+    name: ['pip']
+    state: latest
+    extra_args: --user
+# pip install --upgrade pip
+
+
+- name: Install openstacksdk
+  become: yes
+  pip:
+    name: ['openstacksdk==0.45']
+    state: latest
+# pip install openstacksdk
