@@ -59,13 +59,10 @@ class TweetDB():
         try:
             self.db.save(tweets)
         except ResourceConflict:
-            doc = self.db.get(tweets['_id'])
-            for _key, _value in tweets.items():
-                doc[_key] = _value
-                self.db.save(doc)
+            print('Tweets already exist.')
 
     def _create_views(self):
-    	return
+        return
 
 
 def main(args):
@@ -80,7 +77,6 @@ def main(args):
 
     db = TweetDB(args.database)
 
-    timeout = time.time() + 10
     # send request
     r = api.request('statuses/filter', {'track': 'dogecoin',
                                         'lang': 'en',
@@ -106,4 +102,3 @@ if __name__ == '__main__':
         except Exception as e:
             print(e)
             time.sleep(10)
-
