@@ -22,10 +22,14 @@ app = Flask(__name__)
 CORS(app, resources=r'/*')
 def get_dogcoin(date):
     do = dogcoin.get(id = 'dog')
+    price_list = []
+    dic = {}
     for key in do:
         if key == date:
             price_list = do[key]
-    dic = {}
+    if len(price_list)  == 0:
+        return dic
+
     for i in range(len(price_list)):
         dic[str(i+1)] = price_list[i]
     return dic
@@ -56,6 +60,8 @@ def get_sen(city, date):
                 da = date + '-'
                 hour = re.sub(da, '', i)
                 dic[hour] = info[i]
+        if len(dic) == 0:
+            return dic
         total_sen = 0
         total_count = 0
         total_po = 0
@@ -131,10 +137,16 @@ def get_au():
     try:
         input = request.json
         dic = get_sen(input['city'], input['date'])
+        if len(dic) == 0:
+            response = jsonify(isError=False, message="Success", statusCode=200, data="No data")
+            return response
         aur = a_ur(input['city'])
         final_dic = {}
-        final_dic["ave_sentiment"] = (dic['total']['sum'])/(dic['total']['count'])
-        final_dic["sentiment"] = dic['total']['sum']
+
+        if (dic['total']['count']) == 0:
+            final_dic["sentiment"] = 0
+        else:
+            final_dic["sentiment"] = (dic['total']['sum'])/(dic['total']['count'])
         final_dic["count"] = dic['total']['count']
         final_dic["positive"] = dic['total']['positive']
         final_dic["negative"] = dic['total']['negative']
@@ -154,18 +166,23 @@ def get_dc():
         input = request.json
         final_dic = {}
         dic = get_sen(input['city'], input['date'])
+        if len(dic) == 0:
+            response = jsonify(isError=False, message="Success", statusCode=200, data="No data")
+            return response
 
-        # dic.pop("total")
-
-        #del dic['total']
         final_dic['sen_hourly'] = {}
         for i in dic:
             if i == 'total':
                 continue
-            final_dic['sen_hourly'][i] = (dic[i]["sum"])/(dic[i]["count"])
+            if (dic[i]["count"]) == 0:
+                final_dic['sen_hourly'][i] = 0
+            else:
+                final_dic['sen_hourly'][i] = (dic[i]["sum"])/(dic[i]["count"])
         final_dic['dogcoin_price_hourly'] = get_dogcoin(input['date'])
-        #print(final_dic)
-        response = jsonify(isError=False, message="Success", statusCode=200, data=final_dic)
+        if len(final_dic['dogcoin_price_hourly']) == 0:
+            response = jsonify(isError=False, message="Success", statusCode=200, data="No data")
+        else:
+            response = jsonify(isError=False, message="Success", statusCode=200, data=final_dic)
         return response
     except Exception as e:
         return jsonify(isError=True, message="{}".format(e), statusCode=404)
@@ -219,8 +236,10 @@ def get_bar():
         for name in ['Sydney', 'Melbourne', 'Brisbane', 'Adelaide', 'Perth']:
             aur = a_ur(name)
             sen = get_sen(name, date)
-
-            city_['ave_sen'][name] = (sen['total']["sum"]) / (sen["total"]["count"])
+            if len(sen) == 0 or (sen["total"]["count"]) == 0:
+                city_['ave_sen'][name] = 0
+            else:
+                city_['ave_sen'][name] = (sen['total']["sum"]) / (sen["total"]["count"])
             city_['edu'][name] = aur["edu"]
             city_['income'][name] = aur["income"]
             city_['emp'][name] = aur["emp"]
