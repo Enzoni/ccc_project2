@@ -221,7 +221,6 @@ export default {
       }).then(res => {
         const { cities } = res.data
         this.cities = cities.map(({ city_name, position }) => {
-          const position_with_name = position.push(city_name)
           return {
             city_name,
             position
@@ -235,7 +234,7 @@ export default {
     // =========================== Change Map Center ================================
     changeCenter(type) {
       this.visible = false; 
-      this.center = L.latLng(type[0]);
+      this.center = type[0];
       this.areaText = type[1];
     },
 
@@ -394,9 +393,6 @@ export default {
     
     // =========================== Time formatter ================================
     formatChanger(date) {
-      let off = date.getTimezoneOffset();
-      off = Math.abs(off);
-
       return date.getFullYear() + '-' + (date.getMonth()+1) + '-' +
             date.getDate(); 
     },

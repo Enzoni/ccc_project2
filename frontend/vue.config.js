@@ -1,3 +1,14 @@
+// ==========================
+// COMP90024 Assignment 2
+// Team: 38
+// City: Melbourne
+// Members:
+// Ziran Gu (1038782)
+// Jueying Wang (1016724)
+// Yifei Zhou(980429)
+// Jiakai Ni (988303)
+// Ziyue Liu (1036109)
+// ==========================
 module.exports = {
   lintOnSave: false,
   configureWebpack: {
@@ -11,7 +22,7 @@ module.exports = {
     port: 80,
     proxy: {
       '/api': {
-        target: 'http://0.0.0.0:5000',
+        target: 'http://172.26.132.206:5000',
         ws: true,
         changeOrigin: true,
         secure: false
