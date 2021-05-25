@@ -3,9 +3,6 @@ module.exports = {
   configureWebpack: {
     devtool: 'source-map'
   },
-  chainWebpack: config => {
-
-  },
   productionSourceMap: false,
   publicPath: process.env.NODE_ENV === 'production' ? './' : '/',
   devServer: { 
@@ -14,7 +11,7 @@ module.exports = {
     port: 80,
     proxy: {
       '/api': {
-        target: 'http://10.8.57.220:5000',
+        target: 'http://0.0.0.0:5000',
         ws: true,
         changeOrigin: true,
         secure: false

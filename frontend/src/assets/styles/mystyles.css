@@ -1,7 +1,16 @@
-@import url("https://fonts.googleapis.com/css?family=Open+Sans:400,400italic,600,600italic,800,800italic");
-/*
-  CSS Reset
-*/
+/*************************
+  COMP90024 Assignment 2
+  Team: 38
+  City: Melbourne
+  Members:
+  Ziran Gu (1038782)
+  Jueying Wang (1016724)
+  Yifei Zhou(980429)
+  Jiakai Ni (988303)
+  Ziyue Liu (1036109)
+***************************/
+
+/* CSS set */
 
 html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
   margin: 0;
@@ -211,10 +220,10 @@ section.center {
 */
 
 #intro {
-  background-image: -moz-linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("../images/dogecoin-intro.png");
+  /* background-image: -moz-linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("../images/dogecoin-intro.png");
   background-image: -webkit-linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("../images/dogecoin-intro.png");
-  background-image: -ms-linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("../images/dogecoin-intro.png");
-  background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("../images/dogecoin-intro.png");
+  background-image: -ms-linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("../images/dogecoin-intro.png"); */
+  background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url("../images/dogecoin-intro.png");
   background-attachment: fixed;
   background-position: center center;
   background-repeat: no-repeat;
@@ -231,10 +240,11 @@ section.center {
 }
 
 #intro p {
+  width: 450px;
   text-align: left;
   font-size: large;
   font-weight: bold;
-  /* letter-spacing: 1px; */
+  letter-spacing: 1px;
 }
 
 #intro .button {
@@ -242,11 +252,12 @@ section.center {
 }
 
 #intro .premium {
+  width:165px;
   font-weight: 700;
   border-radius: 6px;
   background-color: rgb(255, 255, 255, 0.8);
   color: #000;
-  margin: 2em 41%;
+  margin: 2em 20%;
   padding: 1em;
 }
 
