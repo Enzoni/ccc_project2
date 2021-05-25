@@ -22,7 +22,7 @@ module.exports = {
     port: 80,
     proxy: {
       '/api': {
-        target: 'http://172.26.132.206:5000',
+        target: 'http://0.0.0.0:5000',
         ws: true,
         changeOrigin: true,
         secure: false
