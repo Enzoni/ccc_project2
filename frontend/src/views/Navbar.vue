@@ -1,6 +1,17 @@
+// ==========================
+// COMP90024 Assignment 2
+// Team: 38
+// City: Melbourne
+// Members:
+// Ziran Gu (1038782)
+// Jueying Wang (1016724)
+// Yifei Zhou(980429)
+// Jiakai Ni (988303)
+// Ziyue Liu (1036109)
+// ==========================
 <template>
   <!-- Navbar -->
-  <header id="header" class="alt">
+  <header id="header">
     <a id="logo" href="/"></a>
     <nav>
       <ul>
@@ -35,7 +46,7 @@ export default {
     handleNavbar () {
       const $header = document.getElementById('header')
       window.onscroll = () => {
-        if(document.body.scrollTop==0&&document.documentElement.scrollTop==0) {
+        if(document.body.scrollTop==0 && document.documentElement.scrollTop==0) {
           $header.classList.add('alt')
         } else {
           $header.classList.remove('alt')
@@ -88,8 +99,8 @@ export default {
   top: 0;
   left: 1em;
 }
-#header.alt {
-  background: transparent;
+/* #header.alt {
+  background: rgb(0, 0, 0);
 }
 #header.alt #logo {
   opacity: 0;
@@ -102,7 +113,7 @@ export default {
 #header.alt .button.map {
   opacity: 0;
   pointer-events: none;
-}
+} */
 #header .button {
   cursor: pointer;
 }
